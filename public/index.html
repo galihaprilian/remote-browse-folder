@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Remote Browse</title>
+
+  <!-- Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- highlight.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <!-- marked.js for markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- github-markdown-css for markdown preview -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.6.1/github-markdown-dark.min.css" />
+
+  <!-- mermaid.js for diagram preview -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #1a1b26;
+      --surface: #16161e;
+      --surface2: #1f2335;
+      --border: #292e42;
+      --border-soft: #222436;
+      --text: #c0caf5;
+      --text-muted: #565f89;
+      --text-dim: #3b4261;
+      --accent: #7aa2f7;
+      --accent-glow: rgba(122,162,247,0.12);
+      --accent2: #7dcfff;
+      --green: #9ece6a;
+      --purple: #bb9af7;
+      --orange: #e0af68;
+      --red: #f7768e;
+      --pink: #ff007c;
+      --teal: #73daca;
+      --hover: #1e2030;
+      --active-bg: #1c2036;
+      --active-border: #7aa2f7;
+      --header-h: 50px;
+      --sidebar-w: 270px;
+      --radius: 6px;
+      --code-font-size: 13px;
+      --md-font-size: 14px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 13.5px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ───────────────────────────────── */
+    .app { display: flex; flex-direction: column; height: 100vh; }
+
+    /* ── Header ───────────────────────────────── */
+    header {
+      height: var(--header-h);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 10px;
+      flex-shrink: 0;
+      user-select: none;
+      position: relative;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--purple) 40%, transparent 70%);
+      opacity: 0.5;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      letter-spacing: -0.2px;
+      white-space: nowrap;
+    }
+    .logo-icon {
+      width: 26px; height: 26px;
+      background: linear-gradient(135deg, #1a2045, #2a1f45);
+      border: 1px solid rgba(122,162,247,0.3);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      box-shadow: 0 0 10px rgba(122,162,247,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .breadcrumb {
+      flex: 1;
+      color: var(--text-muted);
+      font-size: 12.5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .breadcrumb span { cursor: pointer; color: var(--text-muted); padding: 2px 4px; border-radius: 4px; transition: color 0.15s, background 0.15s; }
+    .breadcrumb span:hover { color: var(--accent2); background: var(--accent-glow); }
+    .breadcrumb .sep { color: var(--text-dim); font-size: 11px; margin: 0 1px; }
+
+    .body { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── Sidebar toggle ───────────────────────── */
+    #sidebar-toggle {
+      display: flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 13px;
+      flex-shrink: 0;
+      transition: color 0.15s, background 0.15s, border-color 0.15s;
+    }
+    #sidebar-toggle:hover {
+      background: var(--hover);
+      color: var(--accent2);
+      border-color: var(--accent);
+    }
+
+    /* ── Sidebar ──────────────────────────────── */
+    aside {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: width 0.28s cubic-bezier(0.4,0,0.2,1), opacity 0.22s ease, transform 0.28s cubic-bezier(0.4,0,0.2,1);
+      transform: translateX(0);
+    }
+    aside.collapsed {
+      width: 0;
+      opacity: 0;
+      border-right: none;
+      transform: translateX(-20px);
+    }
+
+    .sidebar-header {
+      padding: 10px 10px 6px;
+      border-bottom: 1px solid var(--border-soft);
+      flex-shrink: 0;
+    }
+    .sidebar-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      padding: 0 4px;
+    }
+
+    .tree {
+      flex: 1;
+      overflow-y: auto;
+      padding: 6px 0 12px;
+    }
+
+    .tree-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+      border-radius: var(--radius);
+      margin: 1px 6px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 13px;
+      transition: background 0.12s, color 0.12s;
+      position: relative;
+    }
+    .tree-item:hover { background: var(--hover); }
+    .tree-item.active {
+      background: var(--active-bg);
+      color: #fff;
+      box-shadow: inset 2px 0 0 var(--active-border);
+    }
+    .tree-item .icon { font-size: 14px; flex-shrink: 0; line-height: 1; display: flex; align-items: center; width: 16px; height: 16px; }
+    .tree-item .icon svg { display: block; }
+    .tree-item .name { overflow: hidden; text-overflow: ellipsis; font-size: 13px; }
+    .tree-item.dir .name { color: #7aa2f7; font-weight: 500; }
+    .tree-item.file .name { color: var(--text); }
+
+    .tree-group {
+      padding-left: 12px;
+      border-left: 1px solid var(--border-soft);
+      margin-left: 19px;
+    }
+
+    /* ── Main content ─────────────────────────── */
+    main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
+
+    .toolbar {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      min-height: 42px;
+    }
+    .toolbar.visible { display: flex; }
+
+    .toolbar-file-icon { font-size: 15px; flex-shrink: 0; }
+
+    .filename {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 13px;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      letter-spacing: -0.1px;
+    }
+
+    .badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    /* colored badges by ext group */
+    .badge.lang-js, .badge.lang-ts, .badge.lang-jsx, .badge.lang-tsx { color: var(--orange); border-color: rgba(227,179,65,0.3); background: rgba(227,179,65,0.07); }
+    .badge.lang-py, .badge.lang-rb, .badge.lang-go, .badge.lang-rs { color: var(--green); border-color: rgba(63,185,80,0.3); background: rgba(63,185,80,0.07); }
+    .badge.lang-md, .badge.lang-mdx, .badge.lang-txt { color: var(--accent2); border-color: rgba(88,166,255,0.3); background: rgba(88,166,255,0.07); }
+    .badge.lang-json, .badge.lang-yaml, .badge.lang-yml, .badge.lang-toml { color: var(--purple); border-color: rgba(188,140,255,0.3); background: rgba(188,140,255,0.07); }
+    .badge.lang-html, .badge.lang-css, .badge.lang-scss { color: #ff7b72; border-color: rgba(255,123,114,0.3); background: rgba(255,123,114,0.07); }
+
+    .toggle-btn {
+      display: flex;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      padding: 2px;
+      gap: 2px;
+    }
+    .toggle-btn button {
+      padding: 3px 12px;
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: 500;
+      border-radius: 4px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .toggle-btn button:hover { color: var(--text); background: var(--hover); }
+    .toggle-btn button.active { background: var(--accent); color: #fff; }
+
+    /* ── Viewer ───────────────────────────────── */
+    .viewer {
+      flex: 1;
+      overflow: auto;
+      padding: 28px 36px;
+    }
+    .viewer.code-mode { padding: 0; overflow: auto; }
+
+    /* markdown */
+    .markdown-body {
+      max-width: 860px;
+      font-size: var(--md-font-size);
+      --color-canvas-default: transparent;
+      --color-canvas-subtle: transparent;
+      --color-border-default: var(--border);
+      background: transparent !important;
+    }
+    /* override github-markdown-css background & border artifacts */
+    .markdown-body pre,
+    .markdown-body code:not(pre code) {
+      background: var(--surface2) !important;
+    }
+
+    /* code viewer */
+    .code-wrap { min-height: 100%; }
+    .code-wrap pre { margin: 0; background: transparent !important; padding: 16px 0; }
+    .code-wrap pre code {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      font-size: var(--code-font-size);
+      line-height: 1.65;
+    }
+
+    /* line numbers */
+    .code-table { border-collapse: collapse; width: auto; min-width: 100%; }
+    .code-table td { padding: 0; }
+    .ln {
+      color: var(--text-dim);
+      text-align: right;
+      padding: 0 14px 0 16px;
+      user-select: none;
+      min-width: 44px;
+      border-right: 1px solid var(--border-soft);
+      font-size: 11.5px;
+      font-family: 'JetBrains Mono', monospace;
+      vertical-align: top;
+      line-height: 1.65;
+      position: sticky;
+      left: 0;
+      background: var(--bg);
+      z-index: 1;
+    }
+    .lc { padding-left: 18px; vertical-align: top; white-space: pre; }
+
+    /* font size controls */
+    .font-size-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2px 3px;
+      flex-shrink: 0;
+    }
+    .font-size-ctrl button {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: inherit;
+      transition: color 0.15s, background 0.15s;
+      line-height: 1;
+    }
+    .font-size-ctrl button:hover { color: var(--accent); background: var(--hover); }
+    .font-size-ctrl .fs-val {
+      font-size: 10.5px;
+      color: var(--text-dim);
+      min-width: 24px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* mermaid diagram */
+    .mermaid-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px 16px;
+      margin: 20px 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid-wrap svg { max-width: 100%; height: auto; }
+    .mermaid-error {
+      color: var(--red);
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      white-space: pre-wrap;
+      padding: 8px;
+    }
+
+    /* empty / welcome */
+    .empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 14px;
+      color: var(--text-muted);
+    }
+    .empty-icon-wrap {
+      width: 72px; height: 72px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 34px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3), 0 0 0 1px var(--border-soft);
+    }
+    .empty p { font-size: 13px; color: var(--text-dim); }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2d3a47; }
+
+    /* responsive */
+    @media (max-width: 640px) {
+      :root { --sidebar-w: 220px; }
+      .viewer { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <button id="sidebar-toggle" title="Toggle sidebar" onclick="toggleSidebar()">
+      <svg id="tog-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3.5" width="12" height="1.4" rx=".7" fill="currentColor"/><rect x="2" y="7.3" width="12" height="1.4" rx=".7" fill="currentColor"/><rect x="2" y="11.1" width="12" height="1.4" rx=".7" fill="currentColor"/></svg>
+    </button>
+    <div class="logo">
+      <div class="logo-icon">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M1 3.5A1.5 1.5 0 012.5 2h3.75L7.5 3.5H14A1.5 1.5 0 0115.5 5v7A1.5 1.5 0 0114 13.5H2.5A1.5 1.5 0 011 12V3.5z" fill="#7aa2f7" opacity=".9"/></svg>
+      </div>
+      Remote Browse
+    </div>
+    <div class="breadcrumb" id="breadcrumb"></div>
+  </header>
+  <div class="body">
+    <aside>
+      <div class="sidebar-header">
+        <div class="sidebar-label">Explorer</div>
+      </div>
+      <div class="tree" id="tree"></div>
+    </aside>
+    <main>
+      <div class="toolbar" id="toolbar">
+        <span class="toolbar-file-icon" id="toolbar-file-icon"></span>
+        <span class="filename" id="toolbar-filename"></span>
+        <span class="badge" id="toolbar-ext"></span>
+        <div class="toggle-btn" id="md-toggle" style="display:none">
+          <button id="btn-preview" class="active" onclick="setView('preview')">Preview</button>
+          <button id="btn-source" onclick="setView('source')">Source</button>
+        </div>
+        <div class="font-size-ctrl">
+          <button onclick="changeFontSize(-1)" title="Decrease font size">A−</button>
+          <span class="fs-val" id="fs-val">13</span>
+          <button onclick="changeFontSize(1)" title="Increase font size">A+</button>
+        </div>
+      </div>
+      <div class="viewer" id="viewer" onclick="handleViewerClick(event)">
+        <div class="empty">
+          <div class="empty-icon-wrap">📁</div>
+          <p>Select a file to view its content</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+// ── Sidebar toggle ───────────────────────────────────
+function setSidebarCollapsed(collapse) {
+  const aside = document.querySelector('aside');
+  const btn = document.getElementById('sidebar-toggle');
+  const icon = document.getElementById('tog-icon');
+  const isCollapsed = aside.classList.contains('collapsed');
+  if (collapse === isCollapsed) return;
+  aside.classList.toggle('collapsed', collapse);
+  icon.innerHTML = collapse
+    ? '<path d="M5 3l6 5-6 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+    : '<rect x="2" y="3.5" width="12" height="1.4" rx=".7" fill="currentColor"/><rect x="2" y="7.3" width="12" height="1.4" rx=".7" fill="currentColor"/><rect x="2" y="11.1" width="12" height="1.4" rx=".7" fill="currentColor"/>';
+  btn.title = collapse ? 'Show sidebar' : 'Hide sidebar';
+}
+function toggleSidebar() {
+  const aside = document.querySelector('aside');
+  setSidebarCollapsed(!aside.classList.contains('collapsed'));
+}
+function collapseSidebar() { setSidebarCollapsed(true); }
+
+function handleViewerClick(e) {
+  const aside = document.querySelector('aside');
+  if (!aside.classList.contains('collapsed')) {
+    // only collapse if not clicking on interactive content (links, buttons, code)
+    if (!e.target.closest('a, button, pre, code, .toggle-btn')) {
+      collapseSidebar();
+    }
+  }
+}
+
+// ── Swipe to toggle sidebar ──────────────────────────
+(function() {
+  let touchStartX = 0, touchStartY = 0;
+  document.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx > 0) setSidebarCollapsed(false);  // swipe right → show
+      else setSidebarCollapsed(true);           // swipe left  → hide
+    }
+  }, { passive: true });
+})();
+
+// ── Font size ─────────────────────────────────────────
+let fontSize = 13;
+function changeFontSize(delta) {
+  fontSize = Math.max(10, Math.min(22, fontSize + delta));
+  document.getElementById('fs-val').textContent = fontSize;
+  document.documentElement.style.setProperty('--code-font-size', fontSize + 'px');
+  document.documentElement.style.setProperty('--md-font-size', (fontSize + 1) + 'px');
+}
+
+// ── State ────────────────────────────────────────────
+let currentFile = null;      // { path, name, ext, content }
+let currentView = 'preview'; // 'preview' | 'source'
+let activeItem = null;
+
+// ── Breadcrumb ───────────────────────────────────────
+function renderBreadcrumb(dirPath) {
+  const el = document.getElementById('breadcrumb');
+  const parts = dirPath.replace(/^\//, '').split('/').filter(Boolean);
+  let html = '<span onclick="loadDir(\'/\')">root</span>';
+  let acc = '';
+  for (const part of parts) {
+    acc += '/' + part;
+    const p = acc;
+    html += `<span class="sep">/</span><span onclick="loadDir('${p}')">${part}</span>`;
+  }
+  el.innerHTML = html;
+}
+
+// ── Tree ─────────────────────────────────────────────
+const expandedDirs = new Set();
+
+async function loadDir(dirPath, containerEl, depth = 0) {
+  if (!containerEl) {
+    containerEl = document.getElementById('tree');
+    containerEl.innerHTML = '';
+  }
+
+  let data;
+  try {
+    const res = await fetch(`/api/list?path=${encodeURIComponent(dirPath)}`);
+    data = await res.json();
+  } catch {
+    return;
+  }
+
+  if (depth === 0) renderBreadcrumb(dirPath);
+
+  for (const item of data.items) {
+    const row = document.createElement('div');
+    row.className = `tree-item ${item.type}`;
+    row.dataset.path = item.path;
+    row.dataset.type = item.type;
+
+    const icon = item.type === 'dir' ? svgFolder(false) : getFileIcon(item.name);
+    row.innerHTML = `<span class="icon">${icon}</span><span class="name">${item.name}</span>`;
+
+    if (item.type === 'dir') {
+      const childContainer = document.createElement('div');
+      childContainer.className = 'tree-group';
+      childContainer.style.display = 'none';
+
+      row.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const open = childContainer.style.display !== 'none';
+        if (open) {
+          childContainer.style.display = 'none';
+          row.querySelector('.icon').innerHTML = svgFolder(false);
+          expandedDirs.delete(item.path);
+        } else {
+          if (childContainer.children.length === 0) {
+            await loadDir(item.path, childContainer, depth + 1);
+          }
+          childContainer.style.display = 'block';
+          row.querySelector('.icon').innerHTML = svgFolder(true);
+          expandedDirs.add(item.path);
+        }
+        setActive(row);
+      });
+
+      containerEl.appendChild(row);
+      containerEl.appendChild(childContainer);
+    } else {
+      row.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setActive(row);
+        collapseSidebar();
+        openFile(item.path, item.name);
+      });
+      containerEl.appendChild(row);
+    }
+  }
+}
+
+function setActive(el) {
+  if (activeItem) activeItem.classList.remove('active');
+  el.classList.add('active');
+  activeItem = el;
+}
+
+// ── File viewer ──────────────────────────────────────
+async function openFile(filePath, fileName) {
+  const viewer = document.getElementById('viewer');
+  viewer.innerHTML = `<div class="empty"><div class="empty-icon-wrap">⏳</div><p>Loading…</p></div>`;
+
+  let data;
+  try {
+    const res = await fetch(`/api/file?path=${encodeURIComponent(filePath)}`);
+    data = await res.json();
+    if (data.error) throw new Error(data.error);
+  } catch (err) {
+    viewer.innerHTML = `<div class="empty"><div class="empty-icon-wrap">⚠️</div><p>${err.message}</p></div>`;
+    hideToolbar();
+    return;
+  }
+
+  currentFile = data;
+  currentView = 'preview';
+
+  showToolbar(data.name, data.ext, getFileIcon(data.name));
+
+  const isMarkdown = ['md', 'markdown', 'mdx'].includes(data.ext);
+  const mdToggle = document.getElementById('md-toggle');
+  mdToggle.style.display = isMarkdown ? 'flex' : 'none';
+
+  if (isMarkdown) {
+    setView('preview');
+  } else {
+    renderCode(data.content, data.ext);
+  }
+}
+
+function setView(view) {
+  currentView = view;
+  document.getElementById('btn-preview').className = view === 'preview' ? 'active' : '';
+  document.getElementById('btn-source').className = view === 'source' ? 'active' : '';
+
+  if (!currentFile) return;
+
+  if (view === 'preview') {
+    renderMarkdown(currentFile.content);
+  } else {
+    renderCode(currentFile.content, currentFile.ext);
+  }
+}
+
+function renderMarkdown(content) {
+  const viewer = document.getElementById('viewer');
+  viewer.classList.remove('code-mode');
+  const html = marked.parse(content);
+  viewer.innerHTML = `<div class="markdown-body">${html}</div>`;
+  renderMermaidBlocks(viewer);
+}
+
+async function renderMermaidBlocks(container) {
+  const blocks = container.querySelectorAll('pre > code.language-mermaid');
+  if (!blocks.length) return;
+
+  let id = 0;
+  for (const block of blocks) {
+    const source = block.textContent;
+    const wrap = document.createElement('div');
+    wrap.className = 'mermaid-wrap';
+    const pre = block.parentElement;
+    try {
+      const { svg } = await mermaid.render(`mermaid-${Date.now()}-${id++}`, source);
+      wrap.innerHTML = svg;
+    } catch (err) {
+      wrap.innerHTML = `<div class="mermaid-error">⚠️ Mermaid error:\n${err.message || err}</div>`;
+    }
+    pre.replaceWith(wrap);
+  }
+}
+
+function renderCode(content, ext) {
+  const viewer = document.getElementById('viewer');
+
+  // Map common extensions to highlight.js language names
+  const langMap = {
+    js: 'javascript', ts: 'typescript', py: 'python', rb: 'ruby',
+    rs: 'rust', go: 'go', java: 'java', cpp: 'cpp', c: 'c',
+    cs: 'csharp', php: 'php', swift: 'swift', kt: 'kotlin',
+    sh: 'bash', bash: 'bash', zsh: 'bash', fish: 'bash',
+    html: 'html', htm: 'html', xml: 'xml', css: 'css', scss: 'scss',
+    json: 'json', yaml: 'yaml', yml: 'yaml', toml: 'toml',
+    sql: 'sql', md: 'markdown', mdx: 'markdown', dockerfile: 'dockerfile',
+    tf: 'hcl', hcl: 'hcl', lua: 'lua', r: 'r', ex: 'elixir',
+    exs: 'elixir', erl: 'erlang', hs: 'haskell', dart: 'dart',
+    vue: 'xml', svelte: 'xml', jsx: 'javascript', tsx: 'typescript',
+  };
+  const lang = langMap[ext] || ext || 'plaintext';
+
+  let highlighted;
+  try {
+    const result = hljs.highlight(content, { language: lang, ignoreIllegals: true });
+    highlighted = result.value;
+  } catch {
+    highlighted = hljs.highlightAuto(content).value;
+  }
+
+  const lines = highlighted.split('\n');
+  const rows = lines.map((line, i) =>
+    `<tr><td class="ln">${i + 1}</td><td class="lc">${line || ' '}</td></tr>`
+  ).join('');
+
+  viewer.innerHTML = `
+    <div class="code-wrap">
+      <pre><code><table class="code-table"><tbody>${rows}</tbody></table></code></pre>
+    </div>`;
+  viewer.classList.add('code-mode');
+}
+
+// ── Toolbar ──────────────────────────────────────────
+function showToolbar(name, ext, iconSvg) {
+  const tb = document.getElementById('toolbar');
+  tb.classList.add('visible');
+  document.getElementById('toolbar-file-icon').innerHTML = iconSvg || '';
+  document.getElementById('toolbar-filename').textContent = name;
+  const badge = document.getElementById('toolbar-ext');
+  badge.textContent = ext || 'txt';
+  badge.className = `badge lang-${(ext || 'txt').toLowerCase()}`;
+}
+function hideToolbar() {
+  document.getElementById('toolbar').classList.remove('visible');
+}
+
+// ── SVG Icons ─────────────────────────────────────────
+function svgFolder(open) {
+  return open
+    ? `<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1 3.5A1.5 1.5 0 012.5 2h3.75L7.5 3.5H14A1.5 1.5 0 0115.5 5v1H1V3.5z" fill="#9ece6a" opacity=".9"/><path d="M1 6h14.5L13.8 13H2.2L1 6z" fill="#9ece6a" opacity=".75"/></svg>`
+    : `<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1 3.5A1.5 1.5 0 012.5 2h3.75L7.5 3.5H14A1.5 1.5 0 0115.5 5v7A1.5 1.5 0 0114 13.5H2.5A1.5 1.5 0 011 12V3.5z" fill="#7aa2f7" opacity=".85"/></svg>`;
+}
+
+function svgFile(color, letters) {
+  const safe = letters.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return `<svg width="13" height="15" viewBox="0 0 13 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="13" height="15" rx="2" fill="${color}" fill-opacity=".12"/><rect x=".5" y=".5" width="12" height="14" rx="1.5" stroke="${color}" stroke-opacity=".45"/><text x="6.5" y="11" font-family="monospace" font-size="6" font-weight="700" fill="${color}" text-anchor="middle" fill-opacity=".9">${safe}</text></svg>`;
+}
+
+// ── File icons ───────────────────────────────────────
+function getFileIcon(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  const t = {
+    js:['#e0af68','JS'], mjs:['#e0af68','JS'], cjs:['#e0af68','JS'],
+    jsx:['#e0af68','JX'], ts:['#7aa2f7','TS'], tsx:['#7aa2f7','TX'],
+    py:['#9ece6a','PY'], rb:['#f7768e','RB'], rs:['#e0af68','RS'],
+    go:['#73daca','GO'], java:['#e0af68','JV'], kt:['#bb9af7','KT'],
+    cs:['#bb9af7','C#'], cpp:['#7aa2f7','C+'], c:['#7aa2f7','C'],
+    php:['#bb9af7','PHP'], swift:['#f7768e','SW'], dart:['#7aa2f7','DT'],
+    lua:['#7aa2f7','LUA'], r:['#7aa2f7','R'], ex:['#bb9af7','EX'],
+    exs:['#bb9af7','EX'], hs:['#bb9af7','HS'], erl:['#f7768e','ERL'],
+    html:['#f7768e','HTM'], htm:['#f7768e','HTM'], xml:['#e0af68','XML'],
+    css:['#7dcfff','CSS'], scss:['#f7768e','SCSS'], sass:['#f7768e','SASS'],
+    json:['#bb9af7','JSON'], yaml:['#bb9af7','YAML'], yml:['#bb9af7','YML'],
+    toml:['#bb9af7','TOML'], env:['#9ece6a','ENV'],
+    md:['#7aa2f7','MD'], mdx:['#7aa2f7','MDX'], txt:['#73daca','TXT'],
+    sh:['#9ece6a','SH'], bash:['#9ece6a','SH'], zsh:['#9ece6a','ZSH'],
+    sql:['#e0af68','SQL'], dockerfile:['#7dcfff','DF'],
+    vue:['#9ece6a','VUE'], svelte:['#f7768e','SVE'],
+    tf:['#bb9af7','TF'], hcl:['#bb9af7','HCL'],
+    svg:['#f7768e','SVG'], png:['#bb9af7','PNG'], jpg:['#bb9af7','JPG'],
+    jpeg:['#bb9af7','JPG'], gif:['#bb9af7','GIF'],
+    pdf:['#f7768e','PDF'], zip:['#e0af68','ZIP'], tar:['#e0af68','TAR'],
+    gz:['#e0af68','GZ'], mp4:['#bb9af7','MP4'], mp3:['#bb9af7','MP3'],
+    lock:['#565f89','LOCK'], gitignore:['#565f89','GIT'],
+  };
+  const [color, letters] = t[ext] || t[name.toLowerCase()] || ['#565f89', (ext||'?').slice(0,4).toUpperCase()];
+  return svgFile(color, letters);
+}
+
+// ── Init ─────────────────────────────────────────────
+mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+loadDir('/');
+</script>
+</body>
+</html>
