@@ -9,12 +9,18 @@
   "scripts": {
     "start": "node server.js"
   },
-  "keywords": ["file-browser", "remote", "markdown", "syntax-highlight"],
+  "keywords": [
+    "file-browser",
+    "remote",
+    "markdown",
+    "syntax-highlight"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
     "express": "^5.2.1",
-    "mime-types": "^3.0.2"
+    "mime-types": "^3.0.2",
+    "xlsx": "^0.18.5"
   }
 }

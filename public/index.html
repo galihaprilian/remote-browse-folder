@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Remote Browse</title>
+  <title>Remote Browser</title>
 
   <!-- Inter font -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <!-- highlight.js -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css" />
+  <link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
   <!-- marked.js for markdown -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
   <!-- github-markdown-css for markdown preview -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.6.1/github-markdown-dark.min.css" />
+  <link id="markdown-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.6.1/github-markdown-light.min.css" />
 
   <!-- mermaid.js for diagram preview -->
   <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
@@ -26,31 +26,72 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #1a1b26;
-      --surface: #16161e;
-      --surface2: #1f2335;
-      --border: #292e42;
-      --border-soft: #222436;
-      --text: #c0caf5;
-      --text-muted: #565f89;
-      --text-dim: #3b4261;
-      --accent: #7aa2f7;
-      --accent-glow: rgba(122,162,247,0.12);
-      --accent2: #7dcfff;
-      --green: #9ece6a;
-      --purple: #bb9af7;
-      --orange: #e0af68;
-      --red: #f7768e;
-      --pink: #ff007c;
-      --teal: #73daca;
-      --hover: #1e2030;
-      --active-bg: #1c2036;
-      --active-border: #7aa2f7;
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --surface2: #f3f6fb;
+      --surface3: #eef3f8;
+      --border: #d0d7de;
+      --border-soft: #e5e9f0;
+      --text: #24292f;
+      --text-muted: #57606a;
+      --text-dim: #8c959f;
+      --accent: #0969da;
+      --accent-glow: rgba(9,105,218,0.08);
+      --accent2: #1f6feb;
+      --green: #1a7f37;
+      --purple: #8250df;
+      --orange: #9a6700;
+      --red: #cf222e;
+      --pink: #bf3989;
+      --teal: #1b7f83;
+      --hover: #eef2f8;
+      --active-bg: #0969da;
+      --active-border: #0969da;
+      --active-text: #ffffff;
+      --logo-grad-1: #eaf2ff;
+      --logo-grad-2: #f4ecff;
+      --logo-border: rgba(9,105,218,0.18);
+      --logo-shadow: 0 0 10px rgba(9,105,218,0.08), inset 0 1px 0 rgba(255,255,255,0.85);
+      --overlay-shadow: 0 4px 24px rgba(31,35,40,0.08), 0 0 0 1px var(--border-soft);
+      --scrollbar-hover: #b6c2cf;
+      --code-inline-bg: rgba(175,184,193,0.2);
       --header-h: 50px;
       --sidebar-w: 270px;
       --radius: 6px;
       --code-font-size: 13px;
       --md-font-size: 14px;
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1f2630;
+      --surface3: #222b36;
+      --border: #30363d;
+      --border-soft: #21262d;
+      --text: #e6edf3;
+      --text-muted: #9da7b3;
+      --text-dim: #6e7681;
+      --accent: #58a6ff;
+      --accent-glow: rgba(88,166,255,0.14);
+      --accent2: #79c0ff;
+      --green: #3fb950;
+      --purple: #bc8cff;
+      --orange: #d29922;
+      --red: #f85149;
+      --pink: #db61a2;
+      --teal: #39c5cf;
+      --hover: #222b36;
+      --active-bg: #1f6feb;
+      --active-border: #58a6ff;
+      --active-text: #ffffff;
+      --logo-grad-1: #172554;
+      --logo-grad-2: #312e81;
+      --logo-border: rgba(88,166,255,0.28);
+      --logo-shadow: 0 0 12px rgba(88,166,255,0.18), inset 0 1px 0 rgba(255,255,255,0.06);
+      --overlay-shadow: 0 10px 30px rgba(1,4,9,0.3), 0 0 0 1px var(--border-soft);
+      --scrollbar-hover: #49576a;
+      --code-inline-bg: rgba(110,118,129,0.2);
     }
 
     html, body {
@@ -100,12 +141,12 @@
     }
     .logo-icon {
       width: 26px; height: 26px;
-      background: linear-gradient(135deg, #1a2045, #2a1f45);
-      border: 1px solid rgba(122,162,247,0.3);
+      background: linear-gradient(135deg, var(--logo-grad-1), var(--logo-grad-2));
+      border: 1px solid var(--logo-border);
       border-radius: 7px;
       display: flex; align-items: center; justify-content: center;
       font-size: 13px;
-      box-shadow: 0 0 10px rgba(122,162,247,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+      box-shadow: var(--logo-shadow);
     }
 
     .breadcrumb {
@@ -123,7 +164,30 @@
     .breadcrumb span:hover { color: var(--accent2); background: var(--accent-glow); }
     .breadcrumb .sep { color: var(--text-dim); font-size: 11px; margin: 0 1px; }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .theme-switch { flex-shrink: 0; }
+
     .body { display: flex; flex: 1; overflow: hidden; }
+
+    .sidebar-backdrop {
+      position: fixed;
+      inset: var(--header-h) 0 0 0;
+      background: rgba(15, 23, 42, 0.36);
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 30;
+    }
+    .sidebar-backdrop.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     /* ── Sidebar toggle ───────────────────────── */
     #sidebar-toggle {
@@ -167,6 +231,10 @@
       padding: 10px 10px 6px;
       border-bottom: 1px solid var(--border-soft);
       flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
     }
     .sidebar-label {
       font-size: 10.5px;
@@ -176,10 +244,438 @@
       color: var(--text-dim);
       padding: 0 4px;
     }
+    .sidebar-tools {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .root-switcher {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-soft);
+      flex-shrink: 0;
+    }
+    .root-summary {
+      min-width: 0;
+      flex: 1;
+    }
+    .root-summary-label {
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 2px;
+    }
+    .root-summary code {
+      display: block;
+      font-size: 11px;
+      color: var(--text);
+      background: var(--surface3);
+      border: 1px solid var(--border-soft);
+      border-radius: 6px;
+      padding: 2px 6px;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .root-picker-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.36);
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+      z-index: 85;
+    }
+    .root-picker-backdrop.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .root-picker-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(420px, calc(100vw - 24px));
+      height: 100vh;
+      transform: translateX(100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      z-index: 90;
+    }
+    .root-picker-panel.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+    }
+    .root-picker-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      box-shadow: var(--overlay-shadow);
+      padding: 16px;
+      height: 100%;
+    }
+    .root-picker-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .root-picker-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .root-picker-subtitle {
+      margin-top: 3px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .root-picker-body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 0;
+    }
+    .favorite-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .favorite-chip {
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      padding: 6px 10px;
+      background: var(--surface2);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      transition: color 0.15s, background 0.15s, border-color 0.15s;
+    }
+    .favorite-chip:hover {
+      background: var(--hover);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+    .favorite-chip.active {
+      background: var(--accent-glow);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+    .favorite-chip span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .root-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .browse-breadcrumb {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+      font-size: 11px;
+    }
+    .crumb-btn {
+      border: 0;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0;
+      font: inherit;
+    }
+    .crumb-btn:hover {
+      color: var(--accent);
+    }
+    .crumb-sep {
+      color: var(--text-dim);
+    }
+    .browse-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border-soft);
+    }
+    .browse-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .browse-head code {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .browse-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 240px;
+      overflow: auto;
+      padding-right: 2px;
+      min-height: 0;
+      flex: 1;
+    }
+    .browse-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 8px;
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      text-align: left;
+    }
+    .browse-item:hover {
+      background: var(--hover);
+      border-color: var(--accent);
+    }
+    .browse-item.active {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .browse-item.selected {
+      box-shadow: inset 0 0 0 1px var(--accent);
+    }
+    .browse-item span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .browse-item small {
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+    .tool-picker-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.36);
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+      z-index: 95;
+    }
+    .tool-picker-backdrop.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .tool-picker-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(560px, calc(100vw - 24px));
+      height: 100vh;
+      transform: translateX(100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      z-index: 100;
+    }
+    .tool-picker-panel.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+    }
+    .tool-picker-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      box-shadow: var(--overlay-shadow);
+      padding: 16px;
+      height: 100%;
+    }
+    .tool-picker-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .tool-picker-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .tool-picker-subtitle {
+      margin-top: 3px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .tool-picker-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 0;
+      flex: 1;
+    }
+    .tool-list {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tool-option {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 10px 12px;
+      min-width: 150px;
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .tool-option:hover {
+      background: var(--hover);
+      border-color: var(--accent);
+    }
+    .tool-option.active {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .tool-option strong {
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .tool-option small {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .tool-workspace {
+      min-height: 0;
+      flex: 1;
+      display: flex;
+    }
+    .tool-panel {
+      display: none;
+      flex: 1;
+      min-height: 0;
+      background: var(--surface2);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 14px;
+      overflow: auto;
+    }
+    .tool-panel.active {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .tool-panel-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .tool-panel-note {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .tool-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .tool-field textarea {
+      width: 100%;
+      min-height: 140px;
+      resize: vertical;
+      padding: 10px 12px;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font: inherit;
+      line-height: 1.5;
+    }
+    .tool-field textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .tool-field textarea[readonly] {
+      background: var(--surface3);
+    }
+    .tool-meta {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+    .tool-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tool-actions .toolbar-btn[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--surface2);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: color 0.15s, background 0.15s, border-color 0.15s, transform 0.15s;
+    }
+    .icon-btn:hover {
+      background: var(--hover);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+    .icon-btn.loading svg {
+      animation: spin 0.8s linear infinite;
+    }
 
     .tree {
       flex: 1;
-      overflow-y: auto;
+      overflow: auto;
       padding: 6px 0 12px;
     }
 
@@ -191,10 +687,9 @@
       cursor: pointer;
       border-radius: var(--radius);
       margin: 1px 6px;
+      min-width: calc(100% - 12px);
+      width: max-content;
       color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       font-size: 13px;
       transition: background 0.12s, color 0.12s;
       position: relative;
@@ -202,19 +697,20 @@
     .tree-item:hover { background: var(--hover); }
     .tree-item.active {
       background: var(--active-bg);
-      color: #fff;
+      color: var(--active-text);
       box-shadow: inset 2px 0 0 var(--active-border);
     }
     .tree-item .icon { font-size: 14px; flex-shrink: 0; line-height: 1; display: flex; align-items: center; width: 16px; height: 16px; }
     .tree-item .icon svg { display: block; }
-    .tree-item .name { overflow: hidden; text-overflow: ellipsis; font-size: 13px; }
-    .tree-item.dir .name { color: #7aa2f7; font-weight: 500; }
+    .tree-item .name { font-size: 13px; white-space: nowrap; }
+    .tree-item.dir .name { color: var(--accent); font-weight: 500; }
     .tree-item.file .name { color: var(--text); }
 
     .tree-group {
       padding-left: 12px;
       border-left: 1px solid var(--border-soft);
       margin-left: 19px;
+      min-width: max-content;
     }
 
     /* ── Main content ─────────────────────────── */
@@ -223,6 +719,7 @@
     .toolbar {
       display: none;
       align-items: center;
+      flex-wrap: wrap;
       gap: 8px;
       padding: 7px 16px;
       background: var(--surface);
@@ -238,11 +735,27 @@
       font-weight: 600;
       color: var(--text);
       font-size: 13px;
-      flex: 1;
+      flex: 1 1 220px;
+      min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
       letter-spacing: -0.1px;
+    }
+    .toolbar-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--text-dim);
+      font-size: 11px;
+      white-space: normal;
+      flex: 1 1 180px;
+      min-width: 0;
+    }
+    .toolbar-meta strong {
+      color: var(--text-muted);
+      font-weight: 600;
     }
 
     .badge {
@@ -252,7 +765,7 @@
       border-radius: 10px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      background: var(--surface2);
+      background: var(--surface3);
       border: 1px solid var(--border);
       color: var(--text-muted);
       flex-shrink: 0;
@@ -262,7 +775,7 @@
     .badge.lang-py, .badge.lang-rb, .badge.lang-go, .badge.lang-rs { color: var(--green); border-color: rgba(63,185,80,0.3); background: rgba(63,185,80,0.07); }
     .badge.lang-md, .badge.lang-mdx, .badge.lang-txt { color: var(--accent2); border-color: rgba(88,166,255,0.3); background: rgba(88,166,255,0.07); }
     .badge.lang-json, .badge.lang-yaml, .badge.lang-yml, .badge.lang-toml { color: var(--purple); border-color: rgba(188,140,255,0.3); background: rgba(188,140,255,0.07); }
-    .badge.lang-html, .badge.lang-css, .badge.lang-scss { color: #ff7b72; border-color: rgba(255,123,114,0.3); background: rgba(255,123,114,0.07); }
+    .badge.lang-html, .badge.lang-css, .badge.lang-scss { color: var(--red); border-color: rgba(207,34,46,0.22); background: rgba(207,34,46,0.06); }
 
     .toggle-btn {
       display: flex;
@@ -288,6 +801,39 @@
     .toggle-btn button:hover { color: var(--text); background: var(--hover); }
     .toggle-btn button.active { background: var(--accent); color: #fff; }
 
+    .toolbar-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      background: var(--surface2);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: 600;
+      line-height: 1;
+      transition: color 0.15s, background 0.15s, border-color 0.15s;
+      flex-shrink: 0;
+    }
+    .toolbar-btn:hover {
+      background: var(--hover);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+    .toolbar-btn.success {
+      color: var(--green);
+      border-color: rgba(158,206,106,0.4);
+      background: rgba(158,206,106,0.08);
+    }
+    .toolbar-btn.error {
+      color: var(--red);
+      border-color: rgba(247,118,142,0.4);
+      background: rgba(247,118,142,0.08);
+    }
+
     /* ── Viewer ───────────────────────────────── */
     .viewer {
       flex: 1;
@@ -296,6 +842,198 @@
     }
     .viewer.code-mode { padding: 0; overflow: auto; }
 
+    /* spreadsheet viewer */
+    .sheet-wrap {
+      display: flex;
+      flex-direction: column;
+      max-width: 100%;
+    }
+    .sheet-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+    .sheet-tab {
+      padding: 5px 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .12s, color .12s;
+    }
+    .sheet-tab:hover { background: var(--hover); color: var(--text); }
+    .sheet-tab.active {
+      color: #fff;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .sheet-notice {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .sheet-scroll {
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      max-width: 100%;
+    }
+    .sheet-table {
+      border-collapse: collapse;
+      font-size: var(--code-font-size);
+      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      white-space: nowrap;
+    }
+    .sheet-table th, .sheet-table td {
+      border: 1px solid var(--border);
+      padding: 5px 10px;
+      text-align: left;
+      vertical-align: top;
+      max-width: 420px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sheet-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: var(--surface2);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-align: center;
+    }
+    .sheet-table .sheet-rownum, .sheet-table .sheet-corner {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: var(--surface2);
+      color: var(--text-muted);
+      text-align: center;
+      font-weight: 600;
+      user-select: none;
+    }
+    .sheet-table .sheet-corner { z-index: 3; }
+    .sheet-table tbody tr:hover td { background: var(--hover); }
+
+    /* spreadsheet filter */
+    .sheet-filterbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      min-height: 20px;
+    }
+    .sheet-filter-status { font-size: 12px; color: var(--text-muted); }
+    .sheet-clear-filters {
+      font-size: 12px;
+      color: var(--accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+    }
+    .sheet-table th.sheet-filterable {
+      white-space: nowrap;
+    }
+    .sheet-colnum { margin-right: 4px; }
+    .sheet-filter-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 17px;
+      height: 17px;
+      padding: 0;
+      vertical-align: middle;
+      color: var(--text-muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .sheet-filter-btn:hover { color: var(--text); background: var(--hover); }
+    .sheet-filter-btn.filtered {
+      color: #fff;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .filter-popup {
+      position: fixed;
+      z-index: 1000;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 8px 28px rgba(0,0,0,.28);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 13px;
+    }
+    .filter-search {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 5px 8px;
+      font-size: 12.5px;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      outline: none;
+    }
+    .filter-search:focus { border-color: var(--accent); }
+    .filter-list {
+      max-height: 240px;
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 2px;
+    }
+    .filter-opt {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 3px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .filter-opt:hover { background: var(--hover); }
+    .filter-opt span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .filter-opt input { cursor: pointer; flex-shrink: 0; }
+    .filter-all { font-weight: 600; border-bottom: 1px solid var(--border); border-radius: 0; }
+    .filter-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .filter-actions-right { display: flex; gap: 6px; }
+    .filter-actions button {
+      font-size: 12.5px;
+      padding: 5px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+    }
+    .filter-actions button:hover { background: var(--hover); }
+    .filter-apply {
+      background: var(--accent) !important;
+      border-color: var(--accent) !important;
+      color: #fff !important;
+    }
+    .filter-clear { border: none !important; background: none !important; color: var(--accent) !important; }
+
     /* markdown */
     .markdown-body {
       max-width: 860px;
@@ -303,12 +1041,17 @@
       --color-canvas-default: transparent;
       --color-canvas-subtle: transparent;
       --color-border-default: var(--border);
+      --color-fg-default: var(--text);
+      --color-fg-muted: var(--text-muted);
+      --color-accent-fg: var(--accent);
+      --color-accent-emphasis: var(--accent);
+      --color-neutral-muted: var(--code-inline-bg);
       background: transparent !important;
     }
     /* override github-markdown-css background & border artifacts */
     .markdown-body pre,
     .markdown-body code:not(pre code) {
-      background: var(--surface2) !important;
+      background: var(--surface3) !important;
     }
 
     /* code viewer */
@@ -346,7 +1089,7 @@
       display: flex;
       align-items: center;
       gap: 2px;
-      background: var(--surface2);
+      background: var(--surface3);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 2px 3px;
@@ -410,20 +1153,211 @@
       border-radius: 18px;
       display: flex; align-items: center; justify-content: center;
       font-size: 34px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.3), 0 0 0 1px var(--border-soft);
+      box-shadow: var(--overlay-shadow);
     }
     .empty p { font-size: 13px; color: var(--text-dim); }
+
+    .toast-stack {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 80;
+      pointer-events: none;
+    }
+    .toast {
+      min-width: 220px;
+      max-width: min(360px, calc(100vw - 32px));
+      padding: 10px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: var(--overlay-shadow);
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.4;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .toast-title {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .toast-meta {
+      margin-top: 2px;
+      color: var(--text-muted);
+      font-size: 11px;
+    }
 
     /* scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: #2d3a47; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
 
     /* responsive */
     @media (max-width: 640px) {
       :root { --sidebar-w: 220px; }
+      header {
+        padding: 0 10px;
+        gap: 8px;
+      }
+      .logo {
+        gap: 6px;
+        font-size: 13px;
+      }
+      .logo-icon {
+        width: 24px;
+        height: 24px;
+      }
+      .breadcrumb {
+        font-size: 11.5px;
+      }
+      .theme-switch button {
+        padding: 3px 9px;
+        font-size: 11px;
+      }
+      .header-actions {
+        gap: 6px;
+      }
+      #sidebar-toggle {
+        width: 28px;
+        height: 28px;
+      }
+      .body {
+        position: relative;
+      }
+      aside {
+        position: fixed;
+        top: var(--header-h);
+        left: 0;
+        bottom: 0;
+        width: min(88vw, 320px);
+        max-width: 320px;
+        border-right: 1px solid var(--border);
+        box-shadow: var(--overlay-shadow);
+        z-index: 40;
+        transition: transform 0.22s ease, opacity 0.18s ease;
+      }
+      aside.collapsed {
+        width: min(88vw, 320px);
+        opacity: 0;
+        border-right: 1px solid var(--border);
+        transform: translateX(-100%);
+      }
+      .sidebar-header {
+        padding: 10px 10px 8px;
+      }
+      .root-switcher {
+        padding: 8px 10px;
+      }
+      .root-picker-panel {
+        width: min(100vw, 360px);
+      }
+      .tool-picker-panel {
+        width: min(100vw, 380px);
+      }
+      .root-picker-card {
+        padding: 12px;
+      }
+      .tool-picker-card {
+        padding: 12px;
+      }
+      .root-picker-head {
+        gap: 8px;
+      }
+      .tool-picker-head {
+        gap: 8px;
+      }
+      .favorite-chip {
+        font-size: 11px;
+      }
+      .browse-item {
+        font-size: 11px;
+      }
+      .tool-option {
+        min-width: 0;
+        width: 100%;
+      }
+      .tool-panel {
+        padding: 12px;
+      }
+      .tool-field textarea {
+        min-height: 120px;
+      }
       .viewer { padding: 16px; }
+      .toolbar {
+        align-items: flex-start;
+        gap: 5px;
+        padding: 7px 10px;
+      }
+      .toolbar-file-icon {
+        order: 1;
+        font-size: 14px;
+      }
+      .filename {
+        order: 2;
+        flex-basis: calc(100% - 80px);
+        font-size: 12.5px;
+      }
+      .badge {
+        order: 3;
+        font-size: 9px;
+        padding: 2px 6px;
+      }
+      .toolbar-meta {
+        order: 4;
+        flex-basis: 100%;
+        gap: 4px 8px;
+        font-size: 10px;
+      }
+      #md-toggle {
+        order: 5;
+      }
+      #md-toggle button {
+        padding: 3px 9px;
+        font-size: 11px;
+      }
+      #copy-btn {
+        order: 6;
+        padding: 4px 8px;
+        font-size: 11px;
+      }
+      .font-size-ctrl {
+        order: 7;
+        margin-left: auto;
+        padding: 1px 2px;
+      }
+      .font-size-ctrl button {
+        padding: 2px 6px;
+        font-size: 10px;
+      }
+      .font-size-ctrl .fs-val {
+        min-width: 22px;
+        font-size: 10px;
+      }
+      .toast-stack {
+        right: 10px;
+        left: 10px;
+        bottom: 10px;
+      }
+      .toast {
+        min-width: 0;
+        max-width: none;
+        padding: 9px 10px;
+      }
     }
   </style>
 </head>
@@ -433,18 +1367,40 @@
     <button id="sidebar-toggle" title="Toggle sidebar" onclick="toggleSidebar()">
       <svg id="tog-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3.5" width="12" height="1.4" rx=".7" fill="currentColor"/><rect x="2" y="7.3" width="12" height="1.4" rx=".7" fill="currentColor"/><rect x="2" y="11.1" width="12" height="1.4" rx=".7" fill="currentColor"/></svg>
     </button>
-    <div class="logo">
-      <div class="logo-icon">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M1 3.5A1.5 1.5 0 012.5 2h3.75L7.5 3.5H14A1.5 1.5 0 0115.5 5v7A1.5 1.5 0 0114 13.5H2.5A1.5 1.5 0 011 12V3.5z" fill="#7aa2f7" opacity=".9"/></svg>
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M1 3.5A1.5 1.5 0 012.5 2h3.75L7.5 3.5H14A1.5 1.5 0 0115.5 5v7A1.5 1.5 0 0114 13.5H2.5A1.5 1.5 0 011 12V3.5z" fill="#7aa2f7" opacity=".9"/></svg>
+        </div>
+        Remote Browser
       </div>
-      Remote Browse
-    </div>
-    <div class="breadcrumb" id="breadcrumb"></div>
-  </header>
+      <div class="breadcrumb" id="breadcrumb"></div>
+      <div class="header-actions">
+        <button id="tools-open-btn" class="icon-btn" type="button" title="Open tools" onclick="openToolsPanel()" aria-label="Open tools">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M9.8 2.6l.5 1.4a1 1 0 00.95.67h1.48a.9.9 0 01.53 1.63l-1.2.87a1 1 0 00-.36 1.12l.46 1.42a.9.9 0 01-1.39 1.01l-1.16-.84a1 1 0 00-1.18 0l-1.16.84A.9.9 0 015.88 11l.46-1.42a1 1 0 00-.36-1.12l-1.2-.87a.9.9 0 01.53-1.63h1.48a1 1 0 00.95-.67l.5-1.4a.9.9 0 011.7 0z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="8" cy="7.2" r="1.6" stroke="currentColor" stroke-width="1.2"/></svg>
+        </button>
+        <div class="toggle-btn theme-switch" aria-label="Theme switch">
+          <button id="theme-light" class="active" onclick="setTheme('light')">Light</button>
+          <button id="theme-dark" onclick="setTheme('dark')">Dark</button>
+        </div>
+      </div>
+    </header>
+  <div id="sidebar-backdrop" class="sidebar-backdrop" onclick="collapseSidebar()"></div>
   <div class="body">
     <aside>
       <div class="sidebar-header">
         <div class="sidebar-label">Explorer</div>
+        <div class="sidebar-tools">
+          <button id="refresh-tree-btn" class="icon-btn" type="button" title="Refresh explorer" onclick="refreshExplorer()" aria-label="Refresh explorer">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13.5 3.5v3h-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 6A5 5 0 103.5 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="root-switcher">
+        <div class="root-summary">
+          <div class="root-summary-label">Current root</div>
+          <code id="root-display">~</code>
+        </div>
+        <button id="root-open-btn" class="toolbar-btn" type="button" onclick="openRootPicker()">Change</button>
       </div>
       <div class="tree" id="tree"></div>
     </aside>
@@ -453,10 +1409,17 @@
         <span class="toolbar-file-icon" id="toolbar-file-icon"></span>
         <span class="filename" id="toolbar-filename"></span>
         <span class="badge" id="toolbar-ext"></span>
+        <div class="toolbar-meta" id="toolbar-meta">
+          <span><strong>Auto-refresh:</strong> <span id="refresh-status">Off</span></span>
+          <span><strong>Updated:</strong> <span id="last-updated">-</span></span>
+        </div>
         <div class="toggle-btn" id="md-toggle" style="display:none">
           <button id="btn-preview" class="active" onclick="setView('preview')">Preview</button>
           <button id="btn-source" onclick="setView('source')">Source</button>
         </div>
+        <button class="toolbar-btn" id="copy-btn" type="button" onclick="copyCurrentFile()" title="Copy file content">
+          <span>Copy</span>
+        </button>
         <div class="font-size-ctrl">
           <button onclick="changeFontSize(-1)" title="Decrease font size">A−</button>
           <span class="fs-val" id="fs-val">13</span>
@@ -472,6 +1435,85 @@
     </main>
   </div>
 </div>
+<div id="toast-stack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
+<div id="tool-picker-backdrop" class="tool-picker-backdrop" onclick="closeToolsPanel()"></div>
+<div id="tool-picker-panel" class="tool-picker-panel" role="dialog" aria-modal="true" aria-labelledby="tool-picker-title">
+  <div class="tool-picker-card">
+    <div class="tool-picker-head">
+      <div>
+        <div id="tool-picker-title" class="tool-picker-title">Text Tools</div>
+        <div class="tool-picker-subtitle">Quick utilities for pasted text from your terminal.</div>
+      </div>
+      <button class="icon-btn" type="button" title="Close tools" onclick="closeToolsPanel()" aria-label="Close tools">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="tool-picker-body">
+      <div id="tool-list" class="tool-list">
+        <button class="tool-option active" type="button" data-tool="fix-url" onclick="selectTool('fix-url')">
+          <strong>Fix URL</strong>
+          <small>Remove wrapped spaces and newlines from a copied URL.</small>
+        </button>
+      </div>
+      <div class="tool-workspace">
+        <div id="tool-panel-fix-url" class="tool-panel active">
+          <div class="tool-panel-title">Fix URL from wrapped terminal text</div>
+          <div class="tool-panel-note">Paste the broken URL below. Spaces, line breaks, zero-width characters, and ANSI escape codes will be cleaned up automatically.</div>
+          <label class="tool-field" for="fix-url-input">
+            Input
+            <textarea id="fix-url-input" placeholder="Paste URL text from terminal here..." spellcheck="false" oninput="updateFixUrlOutput()"></textarea>
+          </label>
+          <label class="tool-field" for="fix-url-output">
+            Result
+            <textarea id="fix-url-output" placeholder="Fixed URL will appear here" spellcheck="false" readonly></textarea>
+          </label>
+          <div class="tool-actions">
+            <button class="toolbar-btn" type="button" onclick="clearFixUrlTool()">Clear</button>
+            <button id="fix-url-copy-btn" class="toolbar-btn" type="button" onclick="copyFixedUrl()" disabled>Copy result</button>
+            <span id="fix-url-meta" class="tool-meta">Paste a URL to start.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="root-picker-backdrop" class="root-picker-backdrop" onclick="closeRootPicker()"></div>
+<div id="root-picker-panel" class="root-picker-panel" role="dialog" aria-modal="true" aria-labelledby="root-picker-title">
+  <div class="root-picker-card">
+    <div class="root-picker-head">
+      <div>
+        <div id="root-picker-title" class="root-picker-title">Change Root Folder</div>
+        <div id="root-picker-current" class="root-picker-subtitle">Current root: ~</div>
+      </div>
+      <button class="icon-btn" type="button" title="Close root picker" onclick="closeRootPicker()" aria-label="Close root picker">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="root-picker-body">
+      <div>
+        <div class="section-label">Favorites</div>
+        <div id="favorite-chips" class="favorite-chips"></div>
+      </div>
+      <div class="root-actions">
+        <button class="toolbar-btn" type="button" onclick="browseRootFolder('~')">Home</button>
+        <button class="toolbar-btn" type="button" onclick="browseRootFolder(rootInfo ? rootInfo.rootPath : '~')">Current Root</button>
+        <button id="browse-open-btn" class="toolbar-btn" type="button" onclick="openBrowsedFolder()">Open Current Folder</button>
+        <button id="favorite-toggle-btn" class="toolbar-btn" type="button" onclick="toggleFavoriteForBrowsedFolder()">Save Favorite</button>
+      </div>
+      <div class="browse-panel">
+        <div class="browse-head">
+          <span>Browse folders</span>
+          <code id="browse-display">~</code>
+          <button id="browse-up-btn" class="icon-btn" type="button" title="Go up" onclick="browseParentFolder()" aria-label="Go up">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 12V4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M4.5 7.5L8 4l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <div id="browse-breadcrumb" class="browse-breadcrumb"></div>
+        <div id="browse-list" class="browse-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 // ── Sidebar toggle ───────────────────────────────────
@@ -479,9 +1521,11 @@ function setSidebarCollapsed(collapse) {
   const aside = document.querySelector('aside');
   const btn = document.getElementById('sidebar-toggle');
   const icon = document.getElementById('tog-icon');
+  const backdrop = document.getElementById('sidebar-backdrop');
   const isCollapsed = aside.classList.contains('collapsed');
   if (collapse === isCollapsed) return;
   aside.classList.toggle('collapsed', collapse);
+  backdrop.classList.toggle('visible', !collapse && window.innerWidth <= 640);
   icon.innerHTML = collapse
     ? '<path d="M5 3l6 5-6 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
     : '<rect x="2" y="3.5" width="12" height="1.4" rx=".7" fill="currentColor"/><rect x="2" y="7.3" width="12" height="1.4" rx=".7" fill="currentColor"/><rect x="2" y="11.1" width="12" height="1.4" rx=".7" fill="currentColor"/>';
@@ -493,9 +1537,18 @@ function toggleSidebar() {
 }
 function collapseSidebar() { setSidebarCollapsed(true); }
 
+function syncSidebarForViewport() {
+  if (window.innerWidth <= 640) {
+    setSidebarCollapsed(true);
+    return;
+  }
+  document.getElementById('sidebar-backdrop').classList.remove('visible');
+  setSidebarCollapsed(false);
+}
+
 function handleViewerClick(e) {
   const aside = document.querySelector('aside');
-  if (!aside.classList.contains('collapsed')) {
+  if (window.innerWidth <= 640 && !aside.classList.contains('collapsed')) {
     // only collapse if not clicking on interactive content (links, buttons, code)
     if (!e.target.closest('a, button, pre, code, .toggle-btn')) {
       collapseSidebar();
@@ -520,8 +1573,33 @@ function handleViewerClick(e) {
   }, { passive: true });
 })();
 
+window.addEventListener('resize', syncSidebarForViewport);
+
 // ── Font size ─────────────────────────────────────────
 let fontSize = 13;
+let copyResetTimer = null;
+let explorerRefreshTimer = null;
+let currentFileRefreshTimer = null;
+let activePath = null;
+let toastCounter = 0;
+let rootInfo = null;
+let browseState = { path: '~', parentPath: null, items: [] };
+let activeTool = 'fix-url';
+let fixUrlCopyResetTimer = null;
+const CURRENT_FILE_REFRESH_MS = 3000;
+const THEME_STORAGE_KEY = 'remote-browser-theme';
+const THEME_ASSETS = {
+  light: {
+    markdown: 'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.6.1/github-markdown-light.min.css',
+    highlight: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css',
+    mermaid: 'default',
+  },
+  dark: {
+    markdown: 'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.6.1/github-markdown-dark.min.css',
+    highlight: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css',
+    mermaid: 'dark',
+  },
+};
 function changeFontSize(delta) {
   fontSize = Math.max(10, Math.min(22, fontSize + delta));
   document.getElementById('fs-val').textContent = fontSize;
@@ -533,6 +1611,506 @@ function changeFontSize(delta) {
 let currentFile = null;      // { path, name, ext, content }
 let currentView = 'preview'; // 'preview' | 'source'
 let activeItem = null;
+
+function setExplorerRefreshLoading(loading) {
+  const btn = document.getElementById('refresh-tree-btn');
+  if (!btn) return;
+  btn.classList.toggle('loading', loading);
+  btn.disabled = loading;
+}
+
+function setRootControlsLoading(loading) {
+  const browseUp = document.getElementById('browse-up-btn');
+  if (browseUp) browseUp.disabled = loading;
+  const browseOpen = document.getElementById('browse-open-btn');
+  if (browseOpen) browseOpen.disabled = loading || !browseState.path;
+  const favoriteToggle = document.getElementById('favorite-toggle-btn');
+  if (favoriteToggle) favoriteToggle.disabled = loading || !browseState.path;
+  document.querySelectorAll('.favorite-chip').forEach(el => {
+    el.disabled = loading;
+  });
+}
+
+function openRootPicker() {
+  closeToolsPanel();
+  const backdrop = document.getElementById('root-picker-backdrop');
+  const panel = document.getElementById('root-picker-panel');
+  if (!backdrop || !panel) return;
+  backdrop.classList.add('visible');
+  panel.classList.add('visible');
+  if (!browseState.items.length) {
+    browseRootFolder(rootInfo ? rootInfo.rootPath : '~');
+  }
+}
+
+function closeRootPicker() {
+  const backdrop = document.getElementById('root-picker-backdrop');
+  const panel = document.getElementById('root-picker-panel');
+  if (!backdrop || !panel) return;
+  backdrop.classList.remove('visible');
+  panel.classList.remove('visible');
+}
+
+function openToolsPanel() {
+  closeRootPicker();
+  const backdrop = document.getElementById('tool-picker-backdrop');
+  const panel = document.getElementById('tool-picker-panel');
+  if (!backdrop || !panel) return;
+  backdrop.classList.add('visible');
+  panel.classList.add('visible');
+  selectTool(activeTool);
+  const input = document.getElementById('fix-url-input');
+  if (input) setTimeout(() => input.focus(), 0);
+}
+
+function closeToolsPanel() {
+  const backdrop = document.getElementById('tool-picker-backdrop');
+  const panel = document.getElementById('tool-picker-panel');
+  if (!backdrop || !panel) return;
+  backdrop.classList.remove('visible');
+  panel.classList.remove('visible');
+}
+
+function selectTool(toolName) {
+  activeTool = toolName === 'fix-url' ? 'fix-url' : 'fix-url';
+  document.querySelectorAll('.tool-option').forEach(button => {
+    button.classList.toggle('active', button.dataset.tool === activeTool);
+  });
+  document.querySelectorAll('.tool-panel').forEach(panel => {
+    panel.classList.toggle('active', panel.id === `tool-panel-${activeTool}`);
+  });
+}
+
+function updateRootUI(info) {
+  if (!info) return;
+  rootInfo = info;
+  const display = document.getElementById('root-display');
+  if (display) {
+    display.textContent = info.rootDisplayPath;
+    display.title = info.rootPath;
+  }
+  const current = document.getElementById('root-picker-current');
+  if (current) current.textContent = `Current root: ${info.rootDisplayPath}`;
+  const favoriteChips = document.getElementById('favorite-chips');
+  if (favoriteChips) {
+    if (!info.favorites.length) {
+      favoriteChips.innerHTML = '<div class="empty"><p>No favorite folders</p></div>';
+    } else {
+      favoriteChips.innerHTML = info.favorites.map(item => {
+        const activeClass = item.path === info.rootPath ? ' active' : '';
+        return `<button class="favorite-chip${activeClass}" type="button" onclick="applyFavoriteRoot(decodeURIComponent('${encodeURIComponent(item.path)}'))"><span>${item.displayPath}</span></button>`;
+      }).join('');
+    }
+  }
+
+  updateFavoriteToggleButton();
+}
+
+async function fetchRootInfo() {
+  const res = await fetch('/api/root');
+  const data = await res.json();
+  if (!res.ok || data.error) throw new Error(data.error || 'Failed to load root folder');
+  updateRootUI(data);
+  return data;
+}
+
+function resetExplorerState() {
+  expandedDirs.clear();
+  activePath = null;
+  if (activeItem) activeItem.classList.remove('active');
+  activeItem = null;
+  stopCurrentFileAutoRefresh();
+  currentFile = null;
+  currentView = 'preview';
+  hideToolbar();
+  const viewer = document.getElementById('viewer');
+  viewer.classList.remove('code-mode');
+  viewer.innerHTML = `<div class="empty"><div class="empty-icon-wrap">📁</div><p>Select a file to view its content</p></div>`;
+}
+
+function renderBrowseList() {
+  const browseDisplay = document.getElementById('browse-display');
+  const browseBreadcrumb = document.getElementById('browse-breadcrumb');
+  const browseList = document.getElementById('browse-list');
+  const browseUpBtn = document.getElementById('browse-up-btn');
+  const browseOpenBtn = document.getElementById('browse-open-btn');
+  if (!browseDisplay || !browseBreadcrumb || !browseList || !browseUpBtn || !browseOpenBtn) return;
+
+  browseDisplay.textContent = browseState.displayPath || '~';
+  browseDisplay.title = browseState.path || '~';
+  browseUpBtn.disabled = !browseState.parentPath;
+  browseOpenBtn.disabled = !browseState.path;
+  renderBrowseBreadcrumb(browseBreadcrumb);
+  updateFavoriteToggleButton();
+
+  if (!browseState.items.length) {
+    browseList.innerHTML = '<div class="empty"><p>No folders here</p></div>';
+    return;
+  }
+
+  browseList.innerHTML = browseState.items.map(item => (
+    `<button class="browse-item${item.path === rootInfo?.rootPath ? ' active' : ''}${item.path === browseState.path ? ' selected' : ''}" type="button" onclick="browseRootFolder(decodeURIComponent('${encodeURIComponent(item.path)}'))"><span>${item.name}</span><small>${item.displayPath}</small></button>`
+  )).join('');
+}
+
+function renderBrowseBreadcrumb(container) {
+  const displayPath = browseState.displayPath || '~';
+  const parts = displayPath === '~' ? ['~'] : displayPath.split('/');
+  let current = '~';
+  container.innerHTML = parts.map((part, index) => {
+    if (index === 0) {
+      current = '~';
+    } else {
+      current = `${current}/${part}`;
+    }
+    const encoded = encodeURIComponent(current);
+    return `${index > 0 ? '<span class="crumb-sep">/</span>' : ''}<button class="crumb-btn" type="button" onclick="browseRootFolder(decodeURIComponent('${encoded}'))">${part}</button>`;
+  }).join('');
+}
+
+function updateFavoriteToggleButton() {
+  const button = document.getElementById('favorite-toggle-btn');
+  if (!button) return;
+  const currentPath = browseState.path;
+  const isFavorite = !!(rootInfo && currentPath && rootInfo.favorites.some(item => item.path === currentPath));
+  button.textContent = isFavorite ? 'Remove Favorite' : 'Save Favorite';
+}
+
+async function browseRootFolder(nextPath) {
+  try {
+    const res = await fetch(`/api/root/browse?path=${encodeURIComponent(nextPath || '~')}`);
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || 'Failed to browse folders');
+    browseState = data;
+    renderBrowseList();
+  } catch (err) {
+    showToast('Failed to browse folders', err.message || String(err));
+  }
+}
+
+function browseParentFolder() {
+  if (!browseState.parentPath) return;
+  browseRootFolder(browseState.parentPath);
+}
+
+function applyFavoriteRoot(nextPath) {
+  if (!nextPath) return;
+  changeRootFolder(nextPath);
+}
+
+async function changeRootFolder(nextPath) {
+  setRootControlsLoading(true);
+  try {
+    const res = await fetch('/api/root', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: nextPath }),
+    });
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || 'Failed to change root folder');
+
+    updateRootUI(data);
+    resetExplorerState();
+    await loadDir('/');
+    await browseRootFolder(data.rootPath);
+    showToast('Root folder updated', data.rootDisplayPath);
+    closeRootPicker();
+  } catch (err) {
+    showToast('Failed to update root', err.message || String(err));
+  } finally {
+    setRootControlsLoading(false);
+  }
+}
+
+async function toggleFavoriteForBrowsedFolder() {
+  if (!browseState.path) return;
+  const isFavorite = !!(rootInfo && rootInfo.favorites.some(item => item.path === browseState.path));
+
+  setRootControlsLoading(true);
+  try {
+    const res = await fetch('/api/root/favorites', {
+      method: isFavorite ? 'DELETE' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: browseState.path }),
+    });
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || 'Failed to update favorites');
+
+    updateRootUI(data);
+    renderBrowseList();
+    showToast(isFavorite ? 'Favorite removed' : 'Favorite saved', browseState.displayPath || browseState.path);
+  } catch (err) {
+    showToast('Failed to update favorites', err.message || String(err));
+  } finally {
+    setRootControlsLoading(false);
+  }
+}
+
+function openBrowsedFolder() {
+  if (!browseState.path) return;
+  changeRootFolder(browseState.path);
+}
+
+function formatUpdatedTime(date = new Date()) {
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+function setToolbarRefreshStatus(status, updatedAt = null) {
+  const statusEl = document.getElementById('refresh-status');
+  const updatedEl = document.getElementById('last-updated');
+  if (!statusEl || !updatedEl) return;
+  statusEl.textContent = status;
+  updatedEl.textContent = updatedAt ? formatUpdatedTime(updatedAt) : '-';
+}
+
+function showToast(title, meta = '') {
+  const stack = document.getElementById('toast-stack');
+  if (!stack) return;
+
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.dataset.toastId = String(++toastCounter);
+  toast.innerHTML = `<div class="toast-title">${title}</div>${meta ? `<div class="toast-meta">${meta}</div>` : ''}`;
+  stack.appendChild(toast);
+
+  requestAnimationFrame(() => toast.classList.add('show'));
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 180);
+  }, 2200);
+}
+
+function setToolCopyButtonState(label, state = '') {
+  const button = document.getElementById('fix-url-copy-btn');
+  if (!button) return;
+  button.textContent = label;
+  button.className = `toolbar-btn${state ? ` ${state}` : ''}`;
+}
+
+function resetToolCopyButton() {
+  if (fixUrlCopyResetTimer) clearTimeout(fixUrlCopyResetTimer);
+  fixUrlCopyResetTimer = null;
+  setToolCopyButtonState('Copy result');
+}
+
+function applyTheme(theme) {
+  const nextTheme = theme === 'dark' ? 'dark' : 'light';
+  const assets = THEME_ASSETS[nextTheme];
+  document.documentElement.dataset.theme = nextTheme;
+  document.getElementById('hljs-theme').href = assets.highlight;
+  document.getElementById('markdown-theme').href = assets.markdown;
+  document.getElementById('theme-light').className = nextTheme === 'light' ? 'active' : '';
+  document.getElementById('theme-dark').className = nextTheme === 'dark' ? 'active' : '';
+  mermaid.initialize({ startOnLoad: false, theme: assets.mermaid });
+}
+
+function rerenderCurrentView() {
+  if (!currentFile) return;
+  if (currentFile.kind === 'sheet') {
+    renderSheet(currentFile);
+    return;
+  }
+  if (currentView === 'preview' && ['md', 'markdown', 'mdx'].includes(currentFile.ext)) {
+    renderMarkdown(currentFile.content);
+    return;
+  }
+  renderCode(currentFile.content, currentFile.ext);
+}
+
+function setTheme(theme) {
+  const nextTheme = theme === 'dark' ? 'dark' : 'light';
+  applyTheme(nextTheme);
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+  } catch {}
+  rerenderCurrentView();
+}
+
+function initTheme() {
+  let savedTheme = 'light';
+  try {
+    savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'light';
+  } catch {}
+  applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
+}
+
+function setCopyButtonState(label, state = '') {
+  const btn = document.getElementById('copy-btn');
+  btn.querySelector('span').textContent = label;
+  btn.className = `toolbar-btn${state ? ` ${state}` : ''}`;
+}
+
+function resetCopyButton() {
+  if (copyResetTimer) clearTimeout(copyResetTimer);
+  copyResetTimer = null;
+  setCopyButtonState('Copy');
+}
+
+function legacyCopyText(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.top = '0';
+  textarea.style.left = '0';
+  textarea.style.width = '1px';
+  textarea.style.height = '1px';
+  textarea.style.padding = '0';
+  textarea.style.border = '0';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+
+  let copied = false;
+  try {
+    copied = document.execCommand('copy');
+  } finally {
+    textarea.remove();
+  }
+
+  return copied;
+}
+
+async function copyTextToClipboard(text) {
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+    await navigator.clipboard.writeText(text);
+    return true;
+  }
+  return legacyCopyText(text);
+}
+
+async function copyCurrentFile() {
+  if (copyResetTimer) {
+    clearTimeout(copyResetTimer);
+    copyResetTimer = null;
+  }
+
+  if (!currentFile) {
+    setCopyButtonState('No file', 'error');
+    copyResetTimer = setTimeout(resetCopyButton, 1800);
+    return;
+  }
+
+  const text = currentFileAsText();
+  try {
+    if (!await copyTextToClipboard(text)) {
+      throw new Error('Clipboard unavailable');
+    }
+    setCopyButtonState('Copied', 'success');
+  } catch (err) {
+    const copied = legacyCopyText(text);
+    setCopyButtonState(copied ? 'Copied' : 'Copy failed', copied ? 'success' : 'error');
+    console.error('Failed to copy file content:', err);
+  }
+
+  copyResetTimer = setTimeout(resetCopyButton, 1800);
+}
+
+function unwrapWrappedUrlText(value) {
+  let text = String(value || '').trim();
+  const wrappers = [
+    ['<', '>'],
+    ['"', '"'],
+    ["'", "'"],
+    ['`', '`'],
+    ['(', ')'],
+    ['[', ']'],
+  ];
+
+  let changed = true;
+  while (changed && text.length >= 2) {
+    changed = false;
+    for (const [open, close] of wrappers) {
+      if (text.startsWith(open) && text.endsWith(close)) {
+        text = text.slice(1, -1).trim();
+        changed = true;
+        break;
+      }
+    }
+  }
+
+  return text;
+}
+
+function fixWrappedUrl(rawText) {
+  let text = String(rawText || '')
+    .replace(/\u001b\[[0-9;?]*[ -/]*[@-~]/g, '')
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'");
+
+  const schemeMatch = text.match(/[a-z][a-z0-9+.-]*:\/\//i);
+  if (schemeMatch && typeof schemeMatch.index === 'number' && schemeMatch.index > 0) {
+    text = text.slice(schemeMatch.index);
+  }
+
+  text = unwrapWrappedUrlText(text);
+  text = text.replace(/\s+/g, '');
+  return unwrapWrappedUrlText(text);
+}
+
+function updateFixUrlOutput() {
+  const input = document.getElementById('fix-url-input');
+  const output = document.getElementById('fix-url-output');
+  const meta = document.getElementById('fix-url-meta');
+  const copyButton = document.getElementById('fix-url-copy-btn');
+  if (!input || !output || !meta || !copyButton) return;
+
+  const rawValue = input.value || '';
+  const fixedValue = fixWrappedUrl(rawValue);
+  output.value = fixedValue;
+  copyButton.disabled = !fixedValue;
+  resetToolCopyButton();
+
+  if (!rawValue.trim()) {
+    meta.textContent = 'Paste a URL to start.';
+    return;
+  }
+
+  const removedChars = Math.max(0, rawValue.length - fixedValue.length);
+  meta.textContent = fixedValue
+    ? `Ready to copy. Removed ${removedChars} extra character${removedChars === 1 ? '' : 's'}.`
+    : 'Nothing to fix yet.';
+}
+
+function clearFixUrlTool() {
+  const input = document.getElementById('fix-url-input');
+  const output = document.getElementById('fix-url-output');
+  const meta = document.getElementById('fix-url-meta');
+  const copyButton = document.getElementById('fix-url-copy-btn');
+  if (input) input.value = '';
+  if (output) output.value = '';
+  if (meta) meta.textContent = 'Paste a URL to start.';
+  if (copyButton) copyButton.disabled = true;
+  resetToolCopyButton();
+}
+
+async function copyFixedUrl() {
+  const output = document.getElementById('fix-url-output');
+  if (!output || !output.value) return;
+
+  resetToolCopyButton();
+  try {
+    if (!await copyTextToClipboard(output.value)) {
+      throw new Error('Clipboard unavailable');
+    }
+    setToolCopyButtonState('Copied', 'success');
+    showToast('URL copied', 'Fixed URL is ready to paste');
+  } catch (err) {
+    const copied = legacyCopyText(output.value);
+    setToolCopyButtonState(copied ? 'Copied' : 'Copy failed', copied ? 'success' : 'error');
+    if (copied) {
+      showToast('URL copied', 'Fixed URL is ready to paste');
+    } else {
+      console.error('Failed to copy fixed URL:', err);
+    }
+  }
+
+  fixUrlCopyResetTimer = setTimeout(resetToolCopyButton, 1800);
+}
 
 // ── Breadcrumb ───────────────────────────────────────
 function renderBreadcrumb(dirPath) {
@@ -550,6 +2128,16 @@ function renderBreadcrumb(dirPath) {
 
 // ── Tree ─────────────────────────────────────────────
 const expandedDirs = new Set();
+
+async function refreshExplorer() {
+  if (explorerRefreshTimer) clearTimeout(explorerRefreshTimer);
+  setExplorerRefreshLoading(true);
+  try {
+    await loadDir('/');
+  } finally {
+    explorerRefreshTimer = setTimeout(() => setExplorerRefreshLoading(false), 250);
+  }
+}
 
 async function loadDir(dirPath, containerEl, depth = 0) {
   if (!containerEl) {
@@ -601,6 +2189,12 @@ async function loadDir(dirPath, containerEl, depth = 0) {
 
       containerEl.appendChild(row);
       containerEl.appendChild(childContainer);
+      if (expandedDirs.has(item.path)) {
+        await loadDir(item.path, childContainer, depth + 1);
+        childContainer.style.display = 'block';
+        row.querySelector('.icon').innerHTML = svgFolder(true);
+      }
+      if (activePath === item.path) setActive(row);
     } else {
       row.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -609,6 +2203,7 @@ async function loadDir(dirPath, containerEl, depth = 0) {
         openFile(item.path, item.name);
       });
       containerEl.appendChild(row);
+      if (activePath === item.path) setActive(row);
     }
   }
 }
@@ -617,10 +2212,56 @@ function setActive(el) {
   if (activeItem) activeItem.classList.remove('active');
   el.classList.add('active');
   activeItem = el;
+  activePath = el.dataset.path || null;
 }
 
 // ── File viewer ──────────────────────────────────────
+function stopCurrentFileAutoRefresh() {
+  if (!currentFileRefreshTimer) return;
+  clearInterval(currentFileRefreshTimer);
+  currentFileRefreshTimer = null;
+  setToolbarRefreshStatus('Off');
+}
+
+function startCurrentFileAutoRefresh() {
+  stopCurrentFileAutoRefresh();
+  if (!currentFile || !currentFile.path) return;
+  currentFileRefreshTimer = setInterval(refreshCurrentFileSilently, CURRENT_FILE_REFRESH_MS);
+  setToolbarRefreshStatus('On', new Date());
+}
+
+async function refreshCurrentFileSilently() {
+  if (!currentFile || !currentFile.path) return;
+
+  let data;
+  try {
+    const res = await fetch(`/api/file?path=${encodeURIComponent(currentFile.path)}`, { cache: 'no-store' });
+    data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || 'Failed to refresh file');
+  } catch (err) {
+    stopCurrentFileAutoRefresh();
+    const viewer = document.getElementById('viewer');
+    viewer.classList.remove('code-mode');
+    viewer.innerHTML = `<div class="empty"><div class="empty-icon-wrap">⚠️</div><p>${err.message}</p></div>`;
+    hideToolbar();
+    currentFile = null;
+    return;
+  }
+
+  if (data.content === currentFile.content && data.size === currentFile.size && data.ext === currentFile.ext) {
+    return;
+  }
+
+  currentFile = data;
+  showToolbar(data.name, data.ext, getFileIcon(data.name));
+  const updatedAt = new Date();
+  setToolbarRefreshStatus('On', updatedAt);
+  showToast('File refreshed', `${data.name} updated at ${formatUpdatedTime(updatedAt)}`);
+  rerenderCurrentView();
+}
+
 async function openFile(filePath, fileName) {
+  stopCurrentFileAutoRefresh();
   const viewer = document.getElementById('viewer');
   viewer.innerHTML = `<div class="empty"><div class="empty-icon-wrap">⏳</div><p>Loading…</p></div>`;
 
@@ -632,6 +2273,7 @@ async function openFile(filePath, fileName) {
   } catch (err) {
     viewer.innerHTML = `<div class="empty"><div class="empty-icon-wrap">⚠️</div><p>${err.message}</p></div>`;
     hideToolbar();
+    currentFile = null;
     return;
   }
 
@@ -639,16 +2281,30 @@ async function openFile(filePath, fileName) {
   currentView = 'preview';
 
   showToolbar(data.name, data.ext, getFileIcon(data.name));
+  setToolbarRefreshStatus('On', new Date());
 
-  const isMarkdown = ['md', 'markdown', 'mdx'].includes(data.ext);
+  const isSheet = data.kind === 'sheet';
+  const isMarkdown = !isSheet && ['md', 'markdown', 'mdx'].includes(data.ext);
   const mdToggle = document.getElementById('md-toggle');
   mdToggle.style.display = isMarkdown ? 'flex' : 'none';
 
-  if (isMarkdown) {
-    setView('preview');
-  } else {
-    renderCode(data.content, data.ext);
+  try {
+    if (isSheet) {
+      activeSheetIndex = 0;
+      sheetFilters = {};
+      renderSheet(data);
+    } else if (isMarkdown) {
+      setView('preview');
+    } else {
+      renderCode(data.content, data.ext);
+    }
+  } catch (err) {
+    viewer.innerHTML = `<div class="empty"><div class="empty-icon-wrap">⚠️</div><p>Failed to render: ${escapeHtml(err.message)}</p></div>`;
+    console.error('Render failed:', err);
+    return;
   }
+
+  startCurrentFileAutoRefresh();
 }
 
 function setView(view) {
@@ -731,6 +2387,298 @@ function renderCode(content, ext) {
   viewer.classList.add('code-mode');
 }
 
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function columnLabel(index) {
+  let label = '';
+  let n = index;
+  do {
+    label = String.fromCharCode(65 + (n % 26)) + label;
+    n = Math.floor(n / 26) - 1;
+  } while (n >= 0);
+  return label;
+}
+
+let activeSheetIndex = 0;
+let sheetFilters = {}; // { [sheetIndex]: { [col]: string[] } } — active allowed-value filters
+
+const BLANK_LABEL = '(Blanks)';
+
+function svgFunnel() {
+  return `<svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 2h13a.5.5 0 01.38.82L10 9v4.5a.5.5 0 01-.72.45l-2-1A.5.5 0 017 13V9L1.12 2.82A.5.5 0 011.5 2z"/></svg>`;
+}
+
+function renderSheet(data) {
+  closeFilterPopup();
+  const viewer = document.getElementById('viewer');
+  viewer.classList.remove('code-mode');
+
+  const sheets = data.sheets || [];
+  if (sheets.length === 0) {
+    viewer.innerHTML = `<div class="empty"><div class="empty-icon-wrap">📊</div><p>No sheets found</p></div>`;
+    return;
+  }
+  if (activeSheetIndex >= sheets.length) activeSheetIndex = 0;
+
+  const tabs = sheets.length > 1
+    ? `<div class="sheet-tabs">${sheets.map((s, i) =>
+        `<button class="sheet-tab${i === activeSheetIndex ? ' active' : ''}" data-sheet="${i}">${escapeHtml(s.name)}</button>`
+      ).join('')}</div>`
+    : '';
+
+  const sheet = sheets[activeSheetIndex];
+  const colCount = sheet.rows.reduce((max, row) => Math.max(max, row.length), 0);
+  const filterCols = new Set(sheet.filter ? sheet.filter.columns : []);
+  const headerRow = sheet.filter ? sheet.filter.headerRow : -1;
+  const activeCols = sheetFilters[activeSheetIndex] || {};
+
+  const headCells = ['<th class="sheet-corner"></th>'];
+  for (let c = 0; c < colCount; c += 1) {
+    if (filterCols.has(c)) {
+      const isActive = Array.isArray(activeCols[c]);
+      const colName = headerRow >= 0 && sheet.rows[headerRow] ? sheet.rows[headerRow][c] : '';
+      const title = colName ? `Filter: ${colName}` : `Filter column ${columnLabel(c)}`;
+      headCells.push(
+        `<th class="sheet-filterable"><span class="sheet-colnum">${columnLabel(c)}</span>` +
+        `<button class="sheet-filter-btn${isActive ? ' filtered' : ''}" data-col="${c}" title="${escapeHtml(title)}">${svgFunnel()}</button></th>`
+      );
+    } else {
+      headCells.push(`<th>${columnLabel(c)}</th>`);
+    }
+  }
+  const head = `<tr>${headCells.join('')}</tr>`;
+
+  const body = sheet.rows.map((row, r) => {
+    const cells = [`<td class="sheet-rownum">${r + 1}</td>`];
+    for (let c = 0; c < colCount; c += 1) {
+      cells.push(`<td>${escapeHtml(row[c] != null ? row[c] : '')}</td>`);
+    }
+    return `<tr data-row="${r}">${cells.join('')}</tr>`;
+  }).join('');
+
+  const noticeParts = [];
+  if (sheet.truncated) {
+    noticeParts.push(`Showing first ${sheet.rows.length} of ${sheet.totalRows} rows${sheet.totalCols > colCount ? ` and ${colCount} of ${sheet.totalCols} columns` : ''}`);
+  }
+  const notice = noticeParts.length ? `<div class="sheet-notice">${noticeParts.join(' · ')}</div>` : '';
+  const status = filterCols.size
+    ? `<div class="sheet-filterbar"><span class="sheet-filter-status" id="sheet-filter-status"></span><button class="sheet-clear-filters" id="sheet-clear-filters" style="display:none">Clear all filters</button></div>`
+    : '';
+
+  viewer.innerHTML = `
+    <div class="sheet-wrap">
+      ${tabs}
+      ${status}
+      ${notice}
+      <div class="sheet-scroll">
+        <table class="sheet-table"><thead>${head}</thead><tbody>${body}</tbody></table>
+      </div>
+    </div>`;
+
+  viewer.querySelectorAll('.sheet-tab').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeSheetIndex = Number(btn.dataset.sheet);
+      renderSheet(data);
+    });
+  });
+
+  viewer.querySelectorAll('.sheet-filter-btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openFilterPopup(sheet, Number(btn.dataset.col), btn);
+    });
+  });
+
+  const clearBtn = document.getElementById('sheet-clear-filters');
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      sheetFilters[activeSheetIndex] = {};
+      renderSheet(data);
+    });
+  }
+
+  applySheetFilters(sheet);
+}
+
+function applySheetFilters(sheet) {
+  const viewer = document.getElementById('viewer');
+  const filters = sheetFilters[activeSheetIndex] || {};
+  const headerRow = sheet.filter ? sheet.filter.headerRow : -1;
+
+  const allowedSets = {};
+  for (const col in filters) {
+    if (Array.isArray(filters[col])) allowedSets[col] = new Set(filters[col]);
+  }
+  const activeColumns = Object.keys(allowedSets);
+
+  const trs = viewer.querySelectorAll('.sheet-table tbody tr');
+  let shown = 0;
+  let total = 0;
+  trs.forEach((tr) => {
+    const r = Number(tr.dataset.row);
+    if (r <= headerRow) { tr.style.display = ''; return; }
+    total += 1;
+    let visible = true;
+    for (const col of activeColumns) {
+      const val = (sheet.rows[r] && sheet.rows[r][col] != null) ? sheet.rows[r][col] : '';
+      if (!allowedSets[col].has(val)) { visible = false; break; }
+    }
+    tr.style.display = visible ? '' : 'none';
+    if (visible) shown += 1;
+  });
+
+  const statusEl = document.getElementById('sheet-filter-status');
+  const clearEl = document.getElementById('sheet-clear-filters');
+  if (statusEl) {
+    if (activeColumns.length) {
+      statusEl.textContent = `${shown} of ${total} rows · ${activeColumns.length} filter${activeColumns.length > 1 ? 's' : ''} active`;
+      if (clearEl) clearEl.style.display = '';
+    } else {
+      statusEl.textContent = '';
+      if (clearEl) clearEl.style.display = 'none';
+    }
+  }
+}
+
+let filterPopupEl = null;
+let filterPopupCleanup = null;
+
+function closeFilterPopup() {
+  if (filterPopupEl) { filterPopupEl.remove(); filterPopupEl = null; }
+  if (filterPopupCleanup) { filterPopupCleanup(); filterPopupCleanup = null; }
+}
+
+function openFilterPopup(sheet, col, anchorBtn) {
+  closeFilterPopup();
+
+  const headerRow = sheet.filter ? sheet.filter.headerRow : -1;
+  const seen = new Set();
+  const values = [];
+  for (let r = headerRow + 1; r < sheet.rows.length; r += 1) {
+    const raw = (sheet.rows[r] && sheet.rows[r][col] != null) ? sheet.rows[r][col] : '';
+    if (!seen.has(raw)) { seen.add(raw); values.push(raw); }
+  }
+  values.sort((a, b) => String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' }));
+
+  const filters = sheetFilters[activeSheetIndex] || {};
+  const activeSet = Array.isArray(filters[col]) ? new Set(filters[col]) : null; // null = all checked
+
+  const rows = values.map((v, i) => {
+    const checked = activeSet ? activeSet.has(v) : true;
+    const label = v === '' ? BLANK_LABEL : v;
+    return `<label class="filter-opt"><input type="checkbox" data-val-idx="${i}" ${checked ? 'checked' : ''}><span>${escapeHtml(label)}</span></label>`;
+  }).join('');
+
+  const popup = document.createElement('div');
+  popup.className = 'filter-popup';
+  popup.innerHTML = `
+    <input type="text" class="filter-search" placeholder="Search values…">
+    <label class="filter-opt filter-all"><input type="checkbox" class="filter-selectall" checked><span>(Select all)</span></label>
+    <div class="filter-list">${rows}</div>
+    <div class="filter-actions">
+      <button class="filter-clear">Clear</button>
+      <div class="filter-actions-right">
+        <button class="filter-cancel">Cancel</button>
+        <button class="filter-apply">Apply</button>
+      </div>
+    </div>`;
+  document.body.appendChild(popup);
+  filterPopupEl = popup;
+
+  // position under the anchor button, kept within viewport
+  const rect = anchorBtn.getBoundingClientRect();
+  const width = 240;
+  let left = rect.left;
+  if (left + width > window.innerWidth - 8) left = window.innerWidth - width - 8;
+  popup.style.left = `${Math.max(8, left)}px`;
+  popup.style.top = `${rect.bottom + 4}px`;
+  popup.style.width = `${width}px`;
+
+  const listEl = popup.querySelector('.filter-list');
+  const selectAll = popup.querySelector('.filter-selectall');
+  const searchEl = popup.querySelector('.filter-search');
+
+  function visibleBoxes() {
+    return Array.from(listEl.querySelectorAll('.filter-opt')).filter(o => o.style.display !== 'none')
+      .map(o => o.querySelector('input'));
+  }
+  function syncSelectAll() {
+    const boxes = visibleBoxes();
+    const checkedCount = boxes.filter(b => b.checked).length;
+    selectAll.checked = checkedCount === boxes.length && boxes.length > 0;
+    selectAll.indeterminate = checkedCount > 0 && checkedCount < boxes.length;
+  }
+  syncSelectAll();
+
+  selectAll.addEventListener('change', () => {
+    visibleBoxes().forEach(b => { b.checked = selectAll.checked; });
+  });
+  listEl.addEventListener('change', syncSelectAll);
+  searchEl.addEventListener('input', () => {
+    const q = searchEl.value.toLowerCase();
+    listEl.querySelectorAll('.filter-opt').forEach((opt) => {
+      const text = opt.textContent.toLowerCase();
+      opt.style.display = text.includes(q) ? '' : 'none';
+    });
+    syncSelectAll();
+  });
+
+  popup.querySelector('.filter-apply').addEventListener('click', () => {
+    const chosen = [];
+    listEl.querySelectorAll('input[data-val-idx]').forEach((box) => {
+      if (box.checked) chosen.push(values[Number(box.dataset.valIdx)]);
+    });
+    if (!sheetFilters[activeSheetIndex]) sheetFilters[activeSheetIndex] = {};
+    if (chosen.length === values.length) {
+      delete sheetFilters[activeSheetIndex][col];
+      anchorBtn.classList.remove('filtered');
+    } else {
+      sheetFilters[activeSheetIndex][col] = chosen;
+      anchorBtn.classList.add('filtered');
+    }
+    closeFilterPopup();
+    applySheetFilters(sheet);
+  });
+
+  popup.querySelector('.filter-clear').addEventListener('click', () => {
+    if (sheetFilters[activeSheetIndex]) delete sheetFilters[activeSheetIndex][col];
+    anchorBtn.classList.remove('filtered');
+    closeFilterPopup();
+    applySheetFilters(sheet);
+  });
+
+  popup.querySelector('.filter-cancel').addEventListener('click', closeFilterPopup);
+  popup.addEventListener('click', (e) => e.stopPropagation());
+
+  const onDocClick = () => closeFilterPopup();
+  const onKey = (e) => { if (e.key === 'Escape') closeFilterPopup(); };
+  setTimeout(() => {
+    document.addEventListener('click', onDocClick);
+    document.addEventListener('keydown', onKey);
+  }, 0);
+  filterPopupCleanup = () => {
+    document.removeEventListener('click', onDocClick);
+    document.removeEventListener('keydown', onKey);
+  };
+
+  searchEl.focus();
+}
+
+function currentFileAsText() {
+  if (!currentFile) return '';
+  if (currentFile.kind === 'sheet') {
+    const sheet = (currentFile.sheets || [])[activeSheetIndex] || (currentFile.sheets || [])[0];
+    if (!sheet) return '';
+    return sheet.rows.map(row => row.join('\t')).join('\n');
+  }
+  return currentFile.content || '';
+}
+
 // ── Toolbar ──────────────────────────────────────────
 function showToolbar(name, ext, iconSvg) {
   const tb = document.getElementById('toolbar');
@@ -740,9 +2688,12 @@ function showToolbar(name, ext, iconSvg) {
   const badge = document.getElementById('toolbar-ext');
   badge.textContent = ext || 'txt';
   badge.className = `badge lang-${(ext || 'txt').toLowerCase()}`;
+  resetCopyButton();
 }
 function hideToolbar() {
   document.getElementById('toolbar').classList.remove('visible');
+  resetCopyButton();
+  setToolbarRefreshStatus('Off');
 }
 
 // ── SVG Icons ─────────────────────────────────────────
@@ -783,14 +2734,20 @@ function getFileIcon(name) {
     pdf:['#f7768e','PDF'], zip:['#e0af68','ZIP'], tar:['#e0af68','TAR'],
     gz:['#e0af68','GZ'], mp4:['#bb9af7','MP4'], mp3:['#bb9af7','MP3'],
     lock:['#565f89','LOCK'], gitignore:['#565f89','GIT'],
+    xlsx:['#9ece6a','XLS'], xls:['#9ece6a','XLS'], xlsm:['#9ece6a','XLS'],
+    xlsb:['#9ece6a','XLS'], ods:['#9ece6a','ODS'], csv:['#73daca','CSV'],
   };
   const [color, letters] = t[ext] || t[name.toLowerCase()] || ['#565f89', (ext||'?').slice(0,4).toUpperCase()];
   return svgFile(color, letters);
 }
 
 // ── Init ─────────────────────────────────────────────
-mermaid.initialize({ startOnLoad: false, theme: 'dark' });
-loadDir('/');
+initTheme();
+syncSidebarForViewport();
+clearFixUrlTool();
+fetchRootInfo()
+  .then(info => Promise.all([loadDir('/'), browseRootFolder(info.rootPath)]))
+  .catch(err => showToast('Failed to load root', err.message || String(err)));
 </script>
 </body>
 </html>

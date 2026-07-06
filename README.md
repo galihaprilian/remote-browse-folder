@@ -21,6 +21,7 @@ After global install, run from **any folder**:
 ```bash
 cd /path/to/any/folder
 browse-folder
+browse-folder --port 8080
 ```
 
 Shell alias (optional, add to `~/.zshrc` or `~/.bashrc`):
@@ -36,6 +37,7 @@ Then just run `rbf` from any folder.
 ```bash
 cd /path/to/any/folder
 node /path/to/remote-browse-folder/server.js
+node /path/to/remote-browse-folder/server.js --port 8080
 ```
 
 Open **http://localhost:3000** in your browser.
@@ -50,7 +52,11 @@ Open **http://localhost:3000** in your browser.
 
 ```bash
 PORT=8080 browse-folder
+browse-folder --port 8080
+browse-folder -p 8080
 ```
+
+CLI parameter `--port` / `-p` overrides the `PORT` environment variable when both are provided.
 
 ---
 
@@ -61,8 +67,10 @@ PORT=8080 browse-folder
 - **Line numbers** — sticky left column, horizontal scroll for long lines
 - **Markdown preview** — rendered via marked.js with GitHub Markdown CSS
 - **Mermaid diagrams** — auto-rendered inside Markdown fenced code blocks (` ```mermaid `)
+- **Spreadsheet viewer** — `.xlsx / .xls / .xlsm / .xlsb / .ods` rendered as tables (parsed server-side via SheetJS), with per-sheet tabs
+- **Excel-style column filters** — columns that have an AutoFilter set in the file get a funnel button with a searchable checkbox dropdown; multiple columns combine with AND
 - **Preview / Source toggle** — for Markdown files
-- **Font size control** — A− / A+ buttons in toolbar (range 10–22px)
+- **Font size control** — A− / A+ buttons in toolbar (range 10–22px), applies to code and spreadsheet views
 - **Sidebar toggle** — ☰ button, click viewer area, or swipe left/right (mobile)
 - **Auto-collapse sidebar** — sidebar hides automatically when opening a file
 - **Path traversal protection** — server restricts all access within the served root directory
